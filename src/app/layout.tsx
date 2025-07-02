@@ -1,6 +1,7 @@
 import LeftBar from "@/components/LeftBar";
 import "./globals.css";
 import RightBar from "@/components/RightBar";
+import { ClerkProvider } from "@clerk/nextjs";
 
 export default function RootLayout({
   children,
@@ -10,6 +11,8 @@ export default function RootLayout({
   model:React.ReactNode;
 }>) {
   return (
+    
+  <ClerkProvider>
     <html lang="en">
       <body>
           <div className='max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl xxl-max-w-screen-xxl mx-auto flex justify-between '>
@@ -22,5 +25,7 @@ export default function RootLayout({
           </div>
       </body>
     </html>
+    </ClerkProvider>
+    
   );
 }
