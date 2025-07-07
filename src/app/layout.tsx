@@ -1,6 +1,5 @@
-import LeftBar from "@/components/LeftBar";
+import QueryProvider from "@/providers/QueryProvider";
 import "./globals.css";
-import RightBar from "@/components/RightBar";
 import { ClerkProvider } from "@clerk/nextjs";
 
 export default function AppLayout({
@@ -11,11 +10,13 @@ export default function AppLayout({
   return (
     
   <ClerkProvider>
+    <QueryProvider>
     <html lang="en">
       <body>
          {children}
       </body>
     </html>
+    </QueryProvider>
     </ClerkProvider>
     
   );
