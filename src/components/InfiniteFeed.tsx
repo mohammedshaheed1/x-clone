@@ -5,40 +5,45 @@ import React from "react";
 import InfinityScroll from "react-infinite-scroll-component"
 import Post from "./Post";
 
-const fetchPosts = async ({ pageParam = 1, userProfileId }: { pageParam: number, userProfileId?: string }) => {
-  const res = await fetch(`http://localhost:3000/api/posts?cursor=${pageParam}&user=${userProfileId || ""}`);
-  if (!res.ok) throw new Error("Failed to fetch posts");
-  return res.json(); // must return { posts: [...], hasMore: boolean }
+const fetchPosts = async (pageParam: number, userProfileId?: string) => {
+  const res = await fetch(
+    "http://localhost:3000/api/posts?cursor=" +
+      pageParam +
+      "&user=" +
+      userProfileId
+  );
+  return res.json();
 };
 
 const InfiniteFeed = ({ userProfileId }: { userProfileId?: string }) => {
-  const {
-    data,
-    error,
-    status,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useInfiniteQuery({
-    queryKey: ["posts", userProfileId],
-    queryFn: ({ pageParam = 1 }) => fetchPosts({ pageParam, userProfileId }),
-    getNextPageParam: (lastPage, pages) => {
-      return lastPage.hasMore ? pages.length + 1 : undefined;
-    },
-    initialPageParam: 1,
+   const { data, error, status, hasNextPage, fetchNextPage } = useInfiniteQuery({
+    queryKey: ["posts"],
+    queryFn: ({ pageParam = 2 }) => fetchPosts(pageParam, userProfileId),
+    initialPageParam: 2,
+    getNextPageParam: (lastPage, pages) =>
+      lastPage.hasMore ? pages.length + 2 : undefined,
   });
 
-  if (status === "pending") return <div>Loading...</div>;
-  if (status === "error") return <div>Error loading posts: {(error as Error).message}</div>;
-  console.log("content",data)
+  if (error) return "Something went wrong!";
+  if (status === "pending") return "Loading...";
 
- const allPosts=data?.pages?.flatMap(page=>page.posts)||[]
+  console.log(data);
+
+  const allPosts = data?.pages?.flatMap((page) => page.posts) || [];
 
 
   return (
-      <InfinityScroll dataLength={allPosts.length} next={fetchNextPage} hasMore={!!hasNextPage} loader={<h1>Posts are loading ...</h1>} endMessage={<h1>All posts loaded!</h1>}>
-       {allPosts.map(post=>(<Post post={post} key={post.id}/>))}
-      </InfinityScroll>
+       <InfinityScroll
+      dataLength={allPosts.length}
+      next={fetchNextPage}
+      hasMore={!!hasNextPage}
+      loader={<h1>Posts are loading...</h1>}
+      endMessage={<h1>All posts loaded!</h1>}
+    >
+      {allPosts.map((post) => (
+        <Post key={post.id} post={post}/>
+      ))}
+    </InfinityScroll>
   );
 };
 

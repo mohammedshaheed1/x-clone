@@ -35,7 +35,7 @@ const PostModel = () => {
             <Imag path='icons/location.svg' alt='' w={20} h={20} className='rounded-lg mt-2' tr={true} />
           
             </div>
-            <button className='py-2 px-5 text-black bg-white rounded-full font-bold'>Post</button>
+            {/* <button className='py-2 px-5 text-black bg-white rounded-full font-bold'>Post</button> */}
           </div>
       </div>
 
